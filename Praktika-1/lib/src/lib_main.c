@@ -52,3 +52,56 @@ unsigned char* hex_decode(const char* hex_str, size_t* out_len) {
     }
     return result;
 }
+
+// ============================================================
+// ПОИСК И ЗАМЕНА 
+// ============================================================
+
+void process_block(unsigned char* buffer, size_t bytes_read,
+    SearchState* state,
+    unsigned char* replacement, size_t replacement_len,
+    FILE* output) {
+
+    if (!state || !buffer || !output) return;
+    if (state->pattern_len == 0) {
+        fwrite(buffer, 1, bytes_read, output);
+        return;
+    }
+
+    size_t i = 0;
+    unsigned char* pattern = state->pattern;
+    size_t pattern_len = state->pattern_len;
+
+    while (i < bytes_read) {
+        // Проверяем, не начинается ли здесь паттерн
+        int match = 1;
+        for (size_t j = 0; j < pattern_len; j++) {
+            if (i + j >= bytes_read || buffer[i + j] != pattern[j]) {
+                match = 0;
+                break;
+            }
+        }
+
+        if (match) {
+            // Нашли совпадение → пишем замену
+            if (replacement_len > 0) {
+                fwrite(replacement, 1, replacement_len, output);
+            }
+            i += pattern_len;
+        }
+        else {
+            // Не совпало → пишем байт как есть
+            fwrite(&buffer[i], 1, 1, output);
+            i++;
+        }
+    }
+}
+
+// ============================================================
+// ФУНКЦИЯ ДЛЯ ЗАПИСИ ОСТАТКА 
+// ============================================================
+
+void flush_remaining(SearchState* state, FILE* output) {
+    (void)state;
+    (void)output;
+}
