@@ -96,3 +96,12 @@ void process_block(unsigned char* buffer, size_t bytes_read,
         }
     }
 }
+
+// ============================================================
+// ФУНКЦИЯ ДЛЯ ЗАПИСИ ОСТАТКА 
+// ============================================================
+
+void flush_remaining(SearchState* state, FILE* output) {
+    (void)state;
+    (void)output;
+}
