@@ -1,0 +1,15 @@
+out/
+build/
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+CMakeCache.txt
+CMakeFiles/
+*.ninja
+*.cmake
+x64-Debug/
+.vs/
+.vscode/
