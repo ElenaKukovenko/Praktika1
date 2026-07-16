@@ -53,40 +53,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    void process_block(unsigned char* buffer, size_t bytes_read,
-    SearchState* state,
-    unsigned char* replacement, size_t replacement_len,
-    FILE* output) {
-
-    if (!state || !buffer || !output) return;
-    if (state->pattern_len == 0) {
-        fwrite(buffer, 1, bytes_read, output);
-        return;
-    }
-
-    size_t i = 0;
-    unsigned char* pattern = state->pattern;
-    size_t pattern_len = state->pattern_len;
-
-    while (i < bytes_read) {
-        int match = 1;
-        for (size_t j = 0; j < pattern_len; j++) {
-            if (i + j >= bytes_read || buffer[i + j] != pattern[j]) {
-                match = 0;
-                break;
-            }
-        }
-
-        if (match) {
-            if (replacement_len > 0) {
-                fwrite(replacement, 1, replacement_len, output);
-            }
-            i += pattern_len;
-        } else {
-            fwrite(&buffer[i], 1, 1, output);
-            i++;
-        }
-    }
     fclose(input);
     fclose(output);
     free(pattern);
